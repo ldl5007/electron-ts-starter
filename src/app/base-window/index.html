@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title id="app-title">Electron TypeScript Starter - Version 1.1.0</title>
+
+        <!-- include open source css, jQuery, and bootstrap files -->
+        <link href="../css/photon-0.1.2-dist/css/photon.css" rel="stylesheet">
+        <link href="../css/base-window/base-window.css" rel="stylesheet">
+        <script>
+      window.$ = window.jQuery = require('jquery');
+        </script>
+
+        <!-- include our main script -->
+        <script src="index.js"></script>
+    </head>
+    <body>
+        <div class="window" id="main-window">
+            <div class="window-content">
+                <div class="form-control top-border">
+                    <label>Select messages file</label>
+                    <div class="form-group">
+                        <button class="btn btn-positive user-input" id="browse-button">Browse</button>
+                        <input class="form-control user-input" id="selected-file" type="text">
+                    </div>
+                </div>
+                <div class="form-control no-border">
+                    <div class="checkbox">
+                        <label class="align-center">
+                          <input class="user-input" type="checkbox" id="messages-summary-checkbox"> Messages Statistic Summary
+                        </label>
+                        <select class="form-control user-input" id="messages-summary-select" disabled>
+                            <option>monthly</option>
+                            <option>weekly</option>
+                        </select>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                          <input class="user-input" type="checkbox" id="filter-calls-checkbox" checked> Filter Calls
+                        </label>
+                    </div>
+                </div>    
+                <div class="form-control no-border">
+                    <button class="btn btn-primary user-input" id="filter-button">Start Filter</button>
+                    <button class="btn btn-default user-input" id="open-folder" disabled>Open Folder</button>
+                </div>
+                
+                <div class="form-control no-border" style="height: 60vh">
+                    <textarea class="form-control" id="log-area" readonly></textarea>
+                </div>
+                <div class="form-control no-border" id="progress">
+                    <progress id="progress-bar" style="width:100%" max="100" value="0"></progress>
+                </div>
+                <footer class="form-control bottom-border">
+                    <div id="footer-text">
+                        <a>Help improve this application by </a>
+                        <a href="https://github.com/ldl5007/FBMFilter/issues">report issue or add suggestion</a>
+                        <a> or email me at </a>
+                        <a href="mailto:ldl5007@gmail.com">ldl5007@gmail.com</a>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </body>
+</html>

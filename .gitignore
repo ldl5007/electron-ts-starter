@@ -1,0 +1,13 @@
+node_modules/
+npm-debug.log
+logs/
+.idea/*
+!.idea/runConfigurations
+build/
+facebook-messages-filter-win32-x64/
+facebook-messages-filter-win32-ia32/
+package-lock.json
+ElectronBoilerplate*/
+Electron-Base-Application.iml
+untitled/
+FBMFilter.iml
