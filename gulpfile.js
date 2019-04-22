@@ -1,5 +1,5 @@
 const gulp = require('gulp');
-const clean = require('gulp-clean');
+const del = require('del');
 const ts = require('gulp-typescript');
 const run = require('gulp-run');
 const sourcemaps = require('gulp-sourcemaps');
@@ -15,11 +15,11 @@ log(colors.yellow('Entry File: '), colors.green.bold(pkg.main));
 
 gulp.task('clean', function(){
   // Clean up the build directory
-  return gulp.src(['./build', './' + pkg.name + '*'])
-    .pipe(clean({force: true}));
+  return del('./build', './' + pkg.name + '*');
 });
 
-gulp.task('compile-ts', ['clean'], function(){
+// gulp.task('compile-ts', gulp.series('clean'), function(){
+gulp.task('compile-ts', function(){
   const tsResult = gulp.src('src/**/*.ts')
     .pipe(sourcemaps.init())
     .pipe(tsProject());
@@ -31,14 +31,16 @@ gulp.task('compile-ts', ['clean'], function(){
     .pipe(gulp.dest('build'));
 });
 
-gulp.task('move-windows', ['clean'], function(){
+gulp.task('move-windows', function(){
   // Copy all other files that are needed over to the build directory
   return gulp.src('./src/app/**/!(*.ts)')
     .pipe(gulp.dest('build/app'));
 });
 
-gulp.task('build', ['compile-ts', 'move-windows']);
+gulp.task('build', 
+  gulp.series('clean', gulp.parallel('compile-ts', 'move-windows')));
 
-gulp.task('build-executable', ['compile-ts', 'move-windows'], function(){
+gulp.task('build-executable', 
+  gulp.series('clean', gulp.parallel('compile-ts', 'move-windows'), function(){
   return run('npm run build-app').exec()
-});
+}));
