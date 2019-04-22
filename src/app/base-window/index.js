@@ -9,29 +9,13 @@ $(document).ready(function(){
       ipcRenderer.send('browse-button');
   });
 
-  $('#filter-button').on('click', function(){
-    console.log('filter-button');
-    let filterData = {
-      selectedFile: $("#selected-file").val(),
-      filterCalls: $("#filter-calls-checkbox:checked").val(),
-      messagesSummary: $("#messages-summary-checkbox:checked").val(),
-      summaryType: $('#messages-summary-select').val()
-    };
-    $('.user-input').attr("disabled", "disabled");
-    ipcRenderer.send('filter-button', filterData);
-  });
+  $('#user-checkbox').on('click', () => {
+    console.log('user-checkbox clicked');
 
-  $('#open-folder').on('click', () => {
-    ipcRenderer.send('open-folder', $("#selected-file").val());
-  });
-
-  $('#messages-summary-checkbox').on('click', () => {
-    console.log('message-summary-checkbox clicked');
-
-    if($("#messages-summary-checkbox:checked").val() === "on") {
-      $('#messages-summary-select').attr("disabled", null);
+    if($("#user-checkbox:checked").val() === "on") {
+      $('#user-select').attr("disabled", null);
     } else {
-      $('#messages-summary-select').attr("disabled", "disabled");
+      $('#user-select').attr("disabled", "disabled");
     }
   });
 
@@ -50,17 +34,5 @@ $(document).ready(function(){
       psconsole.scrollTop(psconsole[0].scrollHeight - psconsole.height())
     }
   });
-
-  ipcRenderer.on('set-progress', function(event, progressData){
-    if (progressData.max) {
-      $("#progress-bar").attr("max", progressData.max);
-    }
-    if (progressData.val) {
-      $("#progress-bar").val(progressData.val);
-    }
-  });
-
-  ipcRenderer.on('operation-completed', () => {
-    $('.user-input').attr("disabled", null);
-  });
+  
 });

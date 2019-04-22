@@ -1,13 +1,10 @@
 import * as path from "path";
-import * as childProcess from "child_process";
 import * as fancyLog from "fancy-log";
 import { app, BrowserWindow, dialog, ipcMain } from 'electron';
-import { ThreadMessage, IOperationData, OperationData } from "../app/interfaces/thread-message.interface";
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
-let parserThread;
 
 function createWindow () {
   // Create the browser window.
@@ -35,9 +32,6 @@ function createWindow () {
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
   createWindow();
-
-  parserThread = childProcess.fork(`${__dirname}//parser.js`);
-  parserThread.on('message', parserThreadMessageHandler);
 });
 
 // Quit when all windows are closed.
@@ -67,50 +61,12 @@ ipcMain.on('browse-button', (event) => {
   }
 });
 
-ipcMain.on('filter-button', (event, filterData) => {
-  console.log(filterData);
-  const operationData: IOperationData = new OperationData();
-
-  // check selectedFile
-  if (filterData.selectedFile === "") {
-    dialog.showMessageBox({message:"Orginal message file is missing"});
-    return;
-  } else {
-    operationData.fullPath = filterData.selectedFile;
-  }
-
-  if (filterData.filterCalls === "" && filterData.messageSummary === "") {
-    dialog.showMessageBox({message:"Please select an operation"});
-    return;
-  }
-
-  if (filterData.filterCalls === "on") {
-    log(`Performing call filter for ${filterData.selectedFile}`);
-    operationData.callFilter = true;
-  }
-
-  if (filterData.messagesSummary === "on") {
-    log(`Performing message summary for ${filterData.selectedFile}`);
-    operationData.messagesSummary = true;
-    operationData.summaryType = filterData.summaryType;
-  }
-
-  fancyLog(JSON.stringify(operationData));
-
-  parserThread.send(operationData);
-});
-
-ipcMain.on('open-folder', (event, data: string) => {
-  let folderPath = data.replace(path.basename(data), "");
-
-  fancyLog(`open folder: ${folderPath}`);
-  childProcess.exec(`start "" "${folderPath}"`);
-});
-
+// Send message log message event to log the message in log message area in the UI
 function log(message) {
   fancyLog(message);
   mainWindow.webContents.send('log-message', message);
 }
+
 
 function setProgress(val?, max?) {
   let progressData: {[k: string]: any} = {};
@@ -122,20 +78,4 @@ function setProgress(val?, max?) {
   }
 
   mainWindow.webContents.send('set-progress', progressData);
-}
-
-function parserThreadMessageHandler(threadMessage: ThreadMessage) {
-  fancyLog(JSON.stringify(threadMessage));
-  switch(threadMessage.type) {
-    case "message":
-      log(threadMessage.message);
-      break;
-    case "progress":
-      setProgress(threadMessage.val, threadMessage.max);
-      break;
-    case "completed":
-      log(threadMessage.message);
-      mainWindow.webContents.send('operation-completed');
-      break;
-  }
 }
