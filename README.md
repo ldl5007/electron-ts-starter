@@ -4,7 +4,13 @@ This project is created with the goal to help those who want to quickly start an
 I included Photon CCS package as the base design, feel free to switch to any other CCS package that you see fit.
 
 ## Follow the following instruction to clone the project:
-- To be added
+- Clone this git repository.
+- Create your new git repository.
+- Run the following command to link it to your personal git repo:
+```
+git remote set-url origin git://new.repo.ur
+```
+- Change the package.json configuration to the appropriate name and config.
 
 ## Follow the following instruction to build and run the project:
 ```
